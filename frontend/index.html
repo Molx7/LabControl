@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LabControl — Gestão de Equipamentos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </div>
+        <span class="brand-title">LabControl</span>
+        <span class="brand-badge">Gestão de TI</span>
+      </div>
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span class="status-label">Servidor Conectado</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Main Content -->
+  <main class="page-container">
+
+    <!-- Page Header & Stats -->
+    <section class="page-header">
+      <div>
+        <h1 class="page-title">Inventário de Equipamentos</h1>
+        <p class="page-subtitle">Gerencie os ativos e o estoque do laboratório de informática.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-label">Modelos Registrados</span>
+          <span class="stat-value" id="stat-modelos">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Itens em Estoque</span>
+          <span class="stat-value" id="stat-itens">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      
+      <!-- Card Formulário -->
+      <aside class="card form-card">
+        <div class="card-header">
+          <h2 class="card-title" id="form-title">Novo Equipamento</h2>
+          <p class="card-desc" id="form-desc">Preencha os dados abaixo para cadastrar um item.</p>
+        </div>
+
+        <form id="equipamento-form" autocomplete="off">
+          <input type="hidden" id="equipamento-id" value="">
+
+          <div class="form-field">
+            <label for="nome">Nome do Equipamento <span class="required">*</span></label>
+            <input type="text" id="nome" name="nome" placeholder="Ex: Notebook Lenovo ThinkPad" required minlength="3" maxlength="100">
+            <span class="field-hint">Mínimo de 3 e máximo de 100 caracteres.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="numeroPatrimonio">Número de Patrimônio <span class="required">*</span></label>
+            <input type="text" id="numeroPatrimonio" name="numeroPatrimonio" placeholder="Ex: PAT-00123" required>
+            <span class="field-hint">Identificador único do equipamento.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="categoria">Categoria <span class="required">*</span></label>
+            <input type="text" id="categoria" name="categoria" placeholder="Ex: Notebooks, Monitores..." required list="sugestoes-categoria">
+            <datalist id="sugestoes-categoria">
+              <option value="Notebooks">
+              <option value="Desktops">
+              <option value="Monitores">
+              <option value="Periféricos">
+              <option value="Redes e Conectividade">
+              <option value="Servidores">
+            </datalist>
+          </div>
+
+          <div class="form-field">
+            <label for="quantidade">Quantidade em Estoque <span class="required">*</span></label>
+            <input type="number" id="quantidade" name="quantidade" placeholder="0" min="0" required>
+            <span class="field-hint">Valor numérico maior ou igual a zero.</span>
+          </div>
+
+          <div class="form-buttons">
+            <button type="submit" id="btn-submit" class="btn btn-primary">
+              <span id="btn-submit-text">Cadastrar Equipamento</span>
+            </button>
+            <button type="button" id="btn-cancel" class="btn btn-secondary hidden">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </aside>
+
+      <!-- Card Tabela -->
+      <section class="card table-card">
+        <div class="card-header table-header-flex">
+          <div>
+            <h2 class="card-title">Equipamentos Cadastrados</h2>
+            <p class="card-desc">Lista completa dos itens monitorados pelo sistema.</p>
+          </div>
+          <div class="table-search-box">
+            <input type="text" id="filtro-busca" placeholder="Buscar por nome ou patrimônio..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">ID</th>
+                <th>Equipamento</th>
+                <th style="width: 140px;">Patrimônio</th>
+                <th style="width: 140px;">Categoria</th>
+                <th style="width: 90px; text-align: center;">Qtd</th>
+                <th style="width: 150px; text-align: right;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-corpo">
+              <tr>
+                <td colspan="6" class="cell-loading">
+                  Carregando registros...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

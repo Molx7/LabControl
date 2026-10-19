@@ -1,0 +1,18 @@
+1. ARQUITETURA EM CAMADAS
+
+No meu projeto, a classe Equipamento (model) representa a tabela do banco. O EquipamentoController apenas recebe as requisições web com o @Valid e devolve a resposta HTTP. O EquipamentoService concentra as regras de negócio nos métodos criar e atualizar, enquanto o EquipamentoRepository conversa com o MySQL através do Spring Data JPA.
+A regra de patrimônio duplicado ficou no EquipamentoService porque ela é uma regra de negócio do laboratório, e não da web. Assim, o controller fica focado só no HTTP, enquanto a service usa o existsByNumeroPatrimonio para barrar duplicidades e lançar a exceção DuplicateResourceException (409 Conflict).
+
+
+
+2. VERBOS HTTP E BANCO DE DADOS
+
+No meu projeto, o POST chama o método criar para fazer INSERT (201 Created). O GET usa listarTodos e buscarPorId para fazer SELECT (200 OK). O PUT usa o método atualizar para fazer UPDATE (200 OK), e o DELETE usa o método excluir para fazer DELETE no MySQL (204 No Content).
+Se o id pesquisado não existe no banco, os métodos da service lançam a exceção ResourceNotFoundException, e a API devolve 404 Not Found em JSON. Esse status 404 indica com exatidão que o item procurado não foi encontrado, evitando que o PUT crie um registro novo por engano.
+
+
+
+3. VALIDAÇÃO E SEGURANÇA
+
+O back-end precisa validar porque qualquer usuário consegue burlar o front-end usando o Postman ou desativando o JavaScript. Na classe Equipamento, eu usei anotações como @NotBlank, @Size e @Min para barrar dados vazios ou negativos na entrada, devolvendo 400 Bad Request em JSON caso algo esteja errado.
+Isso também evita o ataque de SQL Injection, que ocorre quando alguém envia comandos SQL em campos de texto. No meu EquipamentoRepository, eu usei apenas os métodos prontos do Spring Data JPA, sem concatenar nenhuma query na mão. O JPA trata todo valor recebido como dado puro, impedindo que o banco execute código malicioso.
